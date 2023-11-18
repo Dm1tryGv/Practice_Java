@@ -12,9 +12,12 @@ public class FootballFrame extends JFrame {
     private JLabel label2;
     private JLabel label3;
     private JLabel label4;
+    private static JLabel label5;
 
-    public int milan = 0;
-    public int madrid = 0;
+    private static boolean timing = true;
+
+    public static int milan = 0;
+    public static int madrid = 0;
 
     public FootballFrame(){
         super("Football");
@@ -55,6 +58,14 @@ public class FootballFrame extends JFrame {
         panel3.add(label3);
 
         getContentPane().add(BorderLayout.SOUTH, panel3);
+
+        JPanel panel4 = new JPanel();
+
+        label5 = new JLabel("00:00");
+
+        panel4.add(label5);
+
+        getContentPane().add(BorderLayout.EAST, panel4);
 
 
         ActionListener actionListener1 = new Milan();
@@ -99,5 +110,33 @@ public class FootballFrame extends JFrame {
         frame.setSize(400,200);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        Timer timer = new Timer(1000, new ActionListener() {
+            public int seconds = 5;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (seconds > 0) {
+                    seconds--;
+                }
+
+                int minutes = (seconds % 3600) / 60;
+                int secs = seconds % 60;
+
+                label5.setText(String.format("%02d:%02d", minutes, secs));
+
+                if (seconds == 0 && timing){
+                    timing = false;
+                    if (milan > madrid){
+                        JOptionPane.showMessageDialog(frame, "Winner: AC Milan");
+                    } else if (milan < madrid) {
+                        JOptionPane.showMessageDialog(frame, "Winner: Real Madrid");
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Winner: DRAW");
+                    }
+                }
+            }
+        });
+        timer.start();
     }
 }
